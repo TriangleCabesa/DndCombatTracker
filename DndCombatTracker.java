@@ -4,10 +4,10 @@ import java.awt.*;
 public class DndCombatTracker 
 {
 	private static Scanner in = new Scanner(System.in);
-	private static MapLayout[][] map;
 	
 	public static void main(String[] args)
 	{
+		MapLayout[][] map;
 		System.out.print("Please input the desired map size: ");
 		int n = in.nextInt();
 		map = new MapLayout[n][n];

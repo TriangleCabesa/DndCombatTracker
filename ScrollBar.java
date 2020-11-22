@@ -61,9 +61,9 @@ public class ScrollBar extends JComponent
 			y = frame.getHeight() - (int)sideScrollBar.getHeight();
 		
 		if(mouse.getBottomScrollClicked())
-			bottomScrollBar.setLocation(x,(int)(r.height - 57));
+			bottomScrollBar.setLocation(x,(r.height - 57));
 		if(mouse.getSideScrollClicked())
-			sideScrollBar.setLocation((int)(r.width - 31),y);
+			sideScrollBar.setLocation((r.width - 31),y);
 		
 		bottomScrollBar = new Rectangle ((int)bottomScrollBar.getX(),
 										 r.height - 57,

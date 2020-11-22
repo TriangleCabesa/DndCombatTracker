@@ -1,9 +1,15 @@
 import java.awt.*;
+import java.util.Random;
+import java.util.Date;
 
 public class MapLayout
 {
 	
-	private int x, y, id, drawnX, drawnY;
+	private int x;
+	private int y; 
+	private int id;
+	private int drawnX;
+	private int drawnY;
 	private Color changingGreen;
 	
 	public MapLayout(){}
@@ -14,9 +20,10 @@ public class MapLayout
 		x = a;
 		y = b;
 		id = di;
-		changingGreen = new Color(20+(int)(Math.random()*28),
-								  210+(int)(Math.random()*20),
-								  70+(int)(Math.random()*32));
+		Random random = new Random(new Date().getTime());
+		changingGreen = new Color(20+random.nextInt(28),
+								  210+random.nextInt(20),
+								  70+random.nextInt(32));
 		drawnX = 0;
 		drawnY = 0;
 		

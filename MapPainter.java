@@ -72,8 +72,8 @@ public class MapPainter extends JComponent
 		double height = mapScaleY * Math.sqrt(3);
 		int width = mapScaleX * 2;
 		
-		int finalMapWidth = (int)((mapSize*width*.75)+width/2)+width*2;
-		int finalMapHeight = (int)((((mapSize)*height)+height/2+((mapSize/2)*height/2))-(int)(height*unusedFloor/2)+height*3);
+		int finalMapWidth = (int)((mapSize*width*.75)+(double)width/2)+width*2;
+		int finalMapHeight = (int)((((mapSize)*height)+height/2+(((double)mapSize/2)*height/2))-(int)(height*unusedFloor/2)+height*3);
 		
 		scrollX = 0;
 		scrollY = 0;
@@ -90,7 +90,7 @@ public class MapPainter extends JComponent
 		}
 		else
 		{
-			scrollX = ((frame.getWidth() - finalMapWidth)/2) * -1;
+			scrollX = ((frame.getWidth() - (double)finalMapWidth)/2) * -1;
 		}
 		
 		if(finalMapHeight > frame.getHeight())
@@ -106,23 +106,21 @@ public class MapPainter extends JComponent
 		}		
 		else
 		{
-			scrollY = (((frame.getHeight()-30) - finalMapHeight)/2) * -1;
+			scrollY = (((frame.getHeight()-30) - (double)finalMapHeight)/2) * -1;
 		}
 		
 		for(int i = 1; i <= mapSize; i++)
 		{
 			for(int j = 1; j <= mapSize; j++)
 			{
-				if(i+j < unusedFloor || i+j > unusedCeiling)
+				if((i+j < unusedFloor || i+j > unusedCeiling)||
+				   (getNewHexX(i) > rectangle.width - 15 + width)||
+				   (getNewHexY(i, j, unusedFloor) > rectangle.height - 15)||
+				   (getNewHexX(i) < 0-width)||
+				   (getNewHexY(i, j, unusedFloor) < 0-height))
+				{
 					continue;
-				if(getNewHexX(i) > rectangle.width - 15 + width)
-					continue;
-				if(getNewHexY(i, j, unusedFloor) > rectangle.height - 15)
-					continue;
-				if(getNewHexX(i) < 0-width)
-					continue;
-				if(getNewHexY(i, j, unusedFloor) < 0-height)
-					continue;
+				}
 					
 				Hexagon hex = this.createHex(i, j, unusedFloor);
 				
@@ -164,18 +162,14 @@ public class MapPainter extends JComponent
 		{
 			for(int j = startY; j < endY; j++)
 			{
-				if(i+j < unusedFloor || i+j > unusedCeiling)
-					continue;
-				if(i<=0 || j<=0)
-					continue;
-				if(i > mapSize || j > mapSize)
-					continue;
-				if(i+j < highlightFloor || i+j > highlightCeiling)
-					continue;
 				Hexagon hex = this.createHex(i, j, unusedFloor);
-				if(hex.getHex().contains(mouseX,mouseY))
+				if((i+j < unusedFloor || i+j > unusedCeiling)||
+				   (i<=0 || j<=0)||
+				   (i > mapSize || j > mapSize)||
+				   (i+j < highlightFloor || i+j > highlightCeiling))
+				{
 					continue;
-				
+				}
 				
 				Color color = new Color(255,166,166,200);
 				g2.setColor(color);
@@ -194,7 +188,7 @@ public class MapPainter extends JComponent
 	
 	private Hexagon createHex(int i, int j, int unusedFloor)
 	{
-		double width = mapScaleX * 2;
+		double width = (double)mapScaleX * 2;
 		double height = mapScaleY * Math.sqrt(3);
 		map[i-1][j-1].setCenter(((int)((i*width*.75)+width/2)) - (int)scrollX,
 				                 (int)((j*height)+height/2+(i*height/2))-(int)(height*unusedFloor/2) - (int)scrollY);
@@ -215,7 +209,7 @@ public class MapPainter extends JComponent
 	private int getNewHexX(int i)
 	{
 		
-		double width = mapScaleX * 2;
+		double width =(double)mapScaleX * 2;
 		return (int)((i*width*.75)+width/2) - (int)scrollX;
 		
 	}

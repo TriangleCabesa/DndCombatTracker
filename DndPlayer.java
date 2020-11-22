@@ -2,7 +2,9 @@
 public class DndPlayer 
 {
 	
-	private int xCoordinate, yCoordinate, zCoordinate;
+	private int xCoordinate;
+	private int yCoordinate;
+	private int zCoordinate;
 	private int movementSpeed; 
 	private int attackRange;
 	private int playerSkin;
