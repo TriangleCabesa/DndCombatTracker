@@ -1,10 +1,11 @@
 import java.util.Scanner;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class DndCombatTracker 
 {
 	private static Scanner in = new Scanner(System.in);
-	
+
 	public static void main(String[] args)
 	{
 		MapLayout[][] map;
@@ -24,8 +25,8 @@ public class DndCombatTracker
 		}
 		
 		
-		
-		DndPlayer player = new DndPlayer(n/2,n/2,30,5);
+		ArrayList<DndPlayer> players = new ArrayList<>();
+		players.add(new DndPlayer(n/2,n/2,30,5));
 		display.intializeDisplay();
 		Point p = MouseInfo.getPointerInfo().getLocation();
 		int x;
@@ -38,7 +39,7 @@ public class DndCombatTracker
 			p = MouseInfo.getPointerInfo().getLocation();
 			x = p.x-display.getFrameX()-7;
 			y = p.y-display.getFrameY()-30;
-			display.displayUpdate(map, x, y,player);
+			display.displayUpdate(map, x, y,players);
 			if(x+y==10000)
 				exitCondition = false;
 			

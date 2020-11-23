@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 
@@ -31,10 +33,10 @@ public class CombatTrackerInterface
 		display.setVisible(true);
 	}
 	
-	public void displayUpdate(MapLayout[][] map, int x, int y, DndPlayer player)
+	public void displayUpdate(MapLayout[][] map, int x, int y, ArrayList<DndPlayer> players)
 	{
 		Rectangle r = display.getBounds();
-		painter.updateInformation(map, x, y, mouse, player.getSpeed(), r, scroll, display);
+		painter.updateInformation(map, x, y, mouse, players, r, scroll, display);
 		display.validate();
 		display.repaint();
 		

@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.util.Random;
-import java.util.Date;
 
 public class MapLayout
 {
@@ -20,10 +19,11 @@ public class MapLayout
 		x = a;
 		y = b;
 		id = di;
-		Random random = new Random(new Date().getTime());
-		changingGreen = new Color(20+random.nextInt(28),
-								  210+random.nextInt(20),
-								  70+random.nextInt(32));
+		Random random = new Random((long)Math.random());
+		random.setSeed(random.nextLong());
+		changingGreen = new Color(20+(int)(Math.random()*28),
+								  210+(int)(Math.random()*20),
+								  70+(int)(Math.random()*32));
 		drawnX = 0;
 		drawnY = 0;
 		

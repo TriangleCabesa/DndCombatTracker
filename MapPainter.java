@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 public class MapPainter extends JComponent
@@ -9,12 +11,11 @@ public class MapPainter extends JComponent
 	private static final long serialVersionUID = 1L;
 	private int mouseX;
 	private int mouseY;
-	private int lastClickX;
-	private int lastClickY;
+	private int hoverX = 0;
+	private int hoverY = 0;
 	private int firstClickX = 0;
 	private int firstClickY = 0;
 	private int mapSize;
-	private int movementSpeed;
 	private GameMouseListener mouse;
 	private MapLayout[][] map;
 	private int mapScaleX = 20;
@@ -26,20 +27,20 @@ public class MapPainter extends JComponent
 	private Rectangle rectangle;
 	private ScrollBar scroll;
 	private JFrame frame;
+	private ArrayList<DndPlayer> players = new ArrayList<>();
+	private int index = -1;
 	
 	public MapPainter(){}
 	
-	public void updateInformation(MapLayout[][] ma, int x1, int y1, GameMouseListener e, int mo, Rectangle r, ScrollBar s, JFrame f)
+	public void updateInformation(MapLayout[][] ma, int x1, int y1, GameMouseListener e, ArrayList<DndPlayer> playerList, Rectangle r, ScrollBar s, JFrame f)
 	{
 		
 		mouseX=x1;
 		mouseY=y1;
 		map = ma;
 		mouse = e;
-		lastClickX = 0;
-		lastClickY = 0;
 		mapSize = map[0].length;
-		movementSpeed = mo;
+		players = playerList;
 		rectangle = r;
 		scroll = s;
 		frame = f;
@@ -129,17 +130,16 @@ public class MapPainter extends JComponent
 				if(hex.getHex().contains(mouseX,mouseY))
 					g2.setColor(Color.RED);
 				
-				if(!mouse.getClicked())
+				if(!mouse.getClicked() && hex.getHex().contains(mouseX,mouseY))
 				{
-					if(hex.getHex().contains(mouseX,mouseY)){
-						highlightedX = i;
-						highlightedY = j;
-					}
+					highlightedX = i;
+					highlightedY = j;
 				}
-				else
+				else if(mouse.getClicked() && hex.getHex().contains(mouseX,mouseY))
 				{
-					lastClickX = mouseX;
-					lastClickY = mouseY;
+					for(int k = 0; k < players.size(); k++)
+						if((players.get(k).getX() == i && players.get(k).getY() == j))
+							index = k;
 				}
 				
 				g2.fill(hex.getHex());
@@ -148,9 +148,35 @@ public class MapPainter extends JComponent
 		
 		
 		scroll.drawZoom(g2);
-		if(highlightedX == 0 || highlightedY == 0)
-			return;
 		
+		for (DndPlayer player: players)
+		{
+			
+			PlayerSprite sprite = new PlayerSprite(player);
+			if(player.getX()==highlightedX && player.getY()==highlightedY)
+				this.drawPlayerDistanceOutline(unusedFloor,unusedCeiling,player,g2);
+			sprite.draw(g2,map);
+			
+		}
+		if(!mouse.getClicked() && index >= 0)
+		{
+			players.get(index).setX(hoverX);
+			players.get(index).setY(hoverY);
+			index = -1;
+		}
+
+		
+		if(finalMapWidth > frame.getWidth())
+			scroll.drawBottom(g2);
+		if(finalMapHeight > frame.getHeight())
+			scroll.drawSide(g2);
+		scroll.drawZoom(g2);
+		
+	}
+
+	private void drawPlayerDistanceOutline(int unusedFloor, int unusedCeiling, DndPlayer player, Graphics2D g2)
+	{
+		int movementSpeed = player.getSpeed();
 		int startX = highlightedX - (movementSpeed/5);
 		int startY = highlightedY - (movementSpeed/5);
 		int endX = highlightedX + (movementSpeed/5)+1;
@@ -162,7 +188,6 @@ public class MapPainter extends JComponent
 		{
 			for(int j = startY; j < endY; j++)
 			{
-				Hexagon hex = this.createHex(i, j, unusedFloor);
 				if((i+j < unusedFloor || i+j > unusedCeiling)||
 				   (i<=0 || j<=0)||
 				   (i > mapSize || j > mapSize)||
@@ -170,20 +195,21 @@ public class MapPainter extends JComponent
 				{
 					continue;
 				}
+				Hexagon hex = this.createHex(i, j, unusedFloor);
 				
 				Color color = new Color(255,166,166,200);
 				g2.setColor(color);
+				if(hex.getHex().contains(mouseX,mouseY))
+				{
+					g2.setColor(Color.RED);
+					hoverX = i;
+					hoverY = j;
+				}
 				
 				g2.fill(hex.getHex());
 			}
 		}
-		
-		if(finalMapWidth > frame.getWidth())
-			scroll.drawBottom(g2);
-		if(finalMapHeight > frame.getHeight())
-			scroll.drawSide(g2);
-		scroll.drawZoom(g2);
-		
+
 	}
 	
 	private Hexagon createHex(int i, int j, int unusedFloor)
@@ -216,7 +242,7 @@ public class MapPainter extends JComponent
 	
 	public Point getFirstClickedPos(){return new Point(firstClickX,firstClickY);}
 	
-	public Point getLastClickedPos(){return new Point(lastClickX,lastClickY);}
+	public Point getLastClickedPos(){return new Point(hoverX,hoverY);}
 	
 	public boolean isClicked(){return mouse.getClicked();}
 	
