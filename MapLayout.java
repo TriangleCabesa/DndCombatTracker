@@ -10,6 +10,7 @@ public class MapLayout
 	private int drawnX;
 	private int drawnY;
 	private Color changingGreen;
+	private boolean isBlocked = false;
 	
 	public MapLayout(){}
 	
@@ -40,6 +41,8 @@ public class MapLayout
 		drawnY = m;
 		
 	}
+
+	public void setBlocked(boolean v){isBlocked = v;}
 	
 	public int getX(){return x;}
 	
@@ -52,5 +55,7 @@ public class MapLayout
 	public int getDrawnX (){return drawnX;}
 	
 	public int getDrawnY (){return drawnY;}
+
+	public boolean getBlocked(){return isBlocked;}
 	
 }
