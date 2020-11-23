@@ -1,7 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class ScrollBar extends JComponent
+public class VisualInputs extends JComponent
 {
 	/**
 	 *
@@ -14,7 +14,7 @@ public class ScrollBar extends JComponent
 	private GameMouseListener mouse;
 	private boolean firstTime = true;
 	
-	public ScrollBar()
+	public VisualInputs()
 	{
 		
 		zoomInButton = new Rectangle(50,10,40,40);
