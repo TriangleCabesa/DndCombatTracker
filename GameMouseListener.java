@@ -10,13 +10,13 @@ public class GameMouseListener implements MouseListener
 	private boolean sideScrollBarClick = false;
 	private boolean zoomInClick = false;
 	private boolean zoomOutClick = false;
-	private ScrollBar scroll;
+	private VisualInputs visualInputs;
 	private JFrame display;
 	
-	public GameMouseListener(ScrollBar s, JFrame frame)
+	public GameMouseListener(VisualInputs s, JFrame frame)
 	{
 		
-		scroll = s;
+		visualInputs = s;
 		display = frame;
 		
 	}
@@ -30,17 +30,17 @@ public class GameMouseListener implements MouseListener
 		int y = (int)(p.y-r.getY()-30);
 		p = new Point(x,y);
 		
-		if(scroll.getBottomScroller().contains(p) && !bottomScrollBarClick)
+		if(visualInputs.getBottomScroller().contains(p) && !bottomScrollBarClick)
 			bottomScrollBarClick = true;
-		else if(scroll.getBottomScroller().contains(p) && bottomScrollBarClick)
+		else if(visualInputs.getBottomScroller().contains(p) && bottomScrollBarClick)
 			bottomScrollBarClick = false;
-		else if(scroll.getSideScroller().contains(p) && !sideScrollBarClick)
+		else if(visualInputs.getSideScroller().contains(p) && !sideScrollBarClick)
 			sideScrollBarClick = true;
-		else if(scroll.getSideScroller().contains(p) && sideScrollBarClick)
+		else if(visualInputs.getSideScroller().contains(p) && sideScrollBarClick)
 			sideScrollBarClick = false;
-		else if(scroll.getZoomInButton().contains(p) && !zoomInClick)
+		else if(visualInputs.getZoomInButton().contains(p) && !zoomInClick)
 			zoomInClick = true;
-		else if(scroll.getZoomOutButton().contains(p) && !zoomOutClick)
+		else if(visualInputs.getZoomOutButton().contains(p) && !zoomOutClick)
 			zoomOutClick = true;
 		else if(initiateClick)
 			initiateClick = false;

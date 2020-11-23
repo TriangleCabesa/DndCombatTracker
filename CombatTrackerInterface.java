@@ -16,7 +16,7 @@ public class CombatTrackerInterface
 	private GameMouseListener mouse;
 	private JFrame display;
 	private MapPainter painter;
-	private ScrollBar scroll;
+	private VisualInputs visualInputs;
 	
 	public void intializeDisplay () 
 	{
@@ -25,8 +25,8 @@ public class CombatTrackerInterface
 		display.setSize(500,500);
 		display.setTitle("Map");
 		display.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		scroll = new ScrollBar();
-		mouse = new GameMouseListener(scroll, display);
+		visualInputs = new VisualInputs();
+		mouse = new GameMouseListener(visualInputs, display);
 		painter = new MapPainter();
 		display.addMouseListener(mouse);
 		display.add(painter);
@@ -36,7 +36,7 @@ public class CombatTrackerInterface
 	public void displayUpdate(MapLayout[][] map, int x, int y, ArrayList<DndPlayer> players)
 	{
 		Rectangle r = display.getBounds();
-		painter.updateInformation(map, x, y, mouse, players, r, scroll, display);
+		painter.updateInformation(map, x, y, mouse, players, r, visualInputs, display);
 		display.validate();
 		display.repaint();
 		

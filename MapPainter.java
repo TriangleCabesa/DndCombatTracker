@@ -25,14 +25,14 @@ public class MapPainter extends JComponent
 	private double scrollX;
 	private double scrollY;
 	private Rectangle rectangle;
-	private ScrollBar scroll;
+	private VisualInputs visualInputs;
 	private JFrame frame;
 	private ArrayList<DndPlayer> players = new ArrayList<>();
 	private int index = -1;
 	
 	public MapPainter(){}
 	
-	public void updateInformation(MapLayout[][] ma, int x1, int y1, GameMouseListener e, ArrayList<DndPlayer> playerList, Rectangle r, ScrollBar s, JFrame f)
+	public void updateInformation(MapLayout[][] ma, int x1, int y1, GameMouseListener e, ArrayList<DndPlayer> playerList, Rectangle r, VisualInputs s, JFrame f)
 	{
 		
 		mouseX=x1;
@@ -42,7 +42,7 @@ public class MapPainter extends JComponent
 		mapSize = map[0].length;
 		players = playerList;
 		rectangle = r;
-		scroll = s;
+		visualInputs = s;
 		frame = f;
 	
 	}
@@ -81,12 +81,12 @@ public class MapPainter extends JComponent
 		if(finalMapWidth > frame.getWidth())
 		{
 			
-			scroll.changeScrollerPosition(mouse, frame);
-			scrollX = (scroll.getBottomPosition().x / 
-			    	   (frame.getWidth() - scroll.getBottomScroller().getWidth() - 7))
+			visualInputs.changeScrollerPosition(mouse, frame);
+			scrollX = (visualInputs.getBottomPosition().x / 
+			    	   (frame.getWidth() - visualInputs.getBottomScroller().getWidth() - 7))
 					   *(finalMapWidth - frame.getWidth());
 			
-			scroll.drawBottom(g2);
+			visualInputs.drawBottom(g2);
 			
 		}
 		else
@@ -97,12 +97,12 @@ public class MapPainter extends JComponent
 		if(finalMapHeight > frame.getHeight())
 		{
 			
-			scroll.changeScrollerPosition(mouse, frame);
-			scrollY = (scroll.getSidePosition().y / 
-			    	   (frame.getHeight() - scroll.getSideScroller().getHeight() - 75))
+			visualInputs.changeScrollerPosition(mouse, frame);
+			scrollY = (visualInputs.getSidePosition().y / 
+			    	   (frame.getHeight() - visualInputs.getSideScroller().getHeight() - 75))
 					   *(finalMapHeight - frame.getHeight());
 			
-			scroll.drawSide(g2);
+			visualInputs.drawSide(g2);
 			
 		}		
 		else
@@ -147,7 +147,7 @@ public class MapPainter extends JComponent
 		}
 		
 		
-		scroll.drawZoom(g2);
+		visualInputs.drawZoom(g2);
 		
 		for (DndPlayer player: players)
 		{
@@ -167,10 +167,10 @@ public class MapPainter extends JComponent
 
 		
 		if(finalMapWidth > frame.getWidth())
-			scroll.drawBottom(g2);
+			visualInputs.drawBottom(g2);
 		if(finalMapHeight > frame.getHeight())
-			scroll.drawSide(g2);
-		scroll.drawZoom(g2);
+			visualInputs.drawSide(g2);
+		visualInputs.drawZoom(g2);
 		
 	}
 
