@@ -129,13 +129,15 @@ public class MapPainter extends JComponent
 				
 				if(hex.getHex().contains(mouseX,mouseY))
 					g2.setColor(Color.RED);
+				if(map[i-1][j-1].getBlocked())
+					g2.setColor(Color.GRAY);
 				
 				if(!mouse.getClicked() && hex.getHex().contains(mouseX,mouseY))
 				{
 					highlightedX = i;
 					highlightedY = j;
 				}
-				else if(mouse.getClicked() && hex.getHex().contains(mouseX,mouseY))
+				else if(mouse.getClicked() && hex.getHex().contains(mouseX,mouseY) && index < 0)
 				{
 					for(int k = 0; k < players.size(); k++)
 						if((players.get(k).getX() == i && players.get(k).getY() == j))
@@ -149,21 +151,25 @@ public class MapPainter extends JComponent
 		
 		visualInputs.drawZoom(g2);
 		
-		for (DndPlayer player: players)
-		{
-			
-			PlayerSprite sprite = new PlayerSprite(player);
-			if(player.getX()==highlightedX && player.getY()==highlightedY)
-				this.drawPlayerDistanceOutline(unusedFloor,unusedCeiling,player,g2);
-			sprite.draw(g2,map);
-			
-		}
 		if(!mouse.getClicked() && index >= 0)
 		{
+			map[players.get(index).getX()-1][players.get(index).getY()-1].setBlocked(false);
 			players.get(index).setX(hoverX);
 			players.get(index).setY(hoverY);
+			map[players.get(index).getX()-1][players.get(index).getY()-1].setBlocked(true);
 			index = -1;
 		}
+		for (DndPlayer player: players)
+			if(player.getX()==highlightedX && player.getY()==highlightedY)
+				this.drawPlayerDistanceOutline(unusedFloor,unusedCeiling,player,g2);
+		
+		for(DndPlayer player: players)
+		{
+			map[player.getX()-1][player.getY()-1].setBlocked(true);
+			PlayerSprite sprite = new PlayerSprite(player);
+			sprite.draw(g2,map);
+		}
+		
 
 		
 		if(finalMapWidth > frame.getWidth())
@@ -176,40 +182,97 @@ public class MapPainter extends JComponent
 
 	private void drawPlayerDistanceOutline(int unusedFloor, int unusedCeiling, DndPlayer player, Graphics2D g2)
 	{
-		int movementSpeed = player.getSpeed();
+		int movementSpeed = player.getSpeed()+5;
 		int startX = highlightedX - (movementSpeed/5);
 		int startY = highlightedY - (movementSpeed/5);
 		int endX = highlightedX + (movementSpeed/5)+1;
 		int endY = highlightedY + (movementSpeed/5)+1;
 		int highlightFloor = (highlightedX + highlightedY) - (movementSpeed/5);
 		int highlightCeiling = (highlightedX + highlightedY) + (movementSpeed/5);
+
+		ArrayList<MapLayout> canReachList = new ArrayList<>();
+		canReachList.add(map[highlightedX-1][highlightedY-1]);
+		
+		for(int k = 1; k < movementSpeed/5; k++)
+		{
+			ArrayList<MapLayout> itemsToAdd = new ArrayList<>();
+			for(MapLayout hex: canReachList)
+			{
+				int x = hex.getX();
+				int y = hex.getY();
+				if(x<1)
+					x=1;
+				if(y<1)
+					y=1;
+				if(x>=mapSize)
+					x=mapSize-1;
+				if(y>=mapSize)
+					y=mapSize-1;
+
+				if(!canReachList.contains(map[x-1][y]) && 
+				   !itemsToAdd.contains(map[x-1][y]) && 
+				   !map[x-1][y].getBlocked())
+					itemsToAdd.add(map[x-1][y]);
+
+				if(!canReachList.contains(map[x-1][y+1])&&
+				   !itemsToAdd.contains(map[x-1][y+1])&&
+				   !map[x-1][y+1].getBlocked())
+					itemsToAdd.add(map[x-1][y+1]);
+
+				if(!canReachList.contains(map[x][y-1])&&
+				   !itemsToAdd.contains(map[x][y-1])&&
+				   !map[x][y-1].getBlocked())
+					itemsToAdd.add(map[x][y-1]);
+				
+				if(!canReachList.contains(map[x][y+1])&&
+				   !itemsToAdd.contains(map[x][y+1])&&
+				   !map[x][y+1].getBlocked())
+					itemsToAdd.add(map[x][y+1]);
+				
+				if(!canReachList.contains(map[x+1][y-1])&&
+				   !itemsToAdd.contains(map[x+1][y-1])&&
+				   !map[x+1][y-1].getBlocked())
+					itemsToAdd.add(map[x+1][y-1]);
+				
+				if(!canReachList.contains(map[x+1][y])&&
+				   !itemsToAdd.contains(map[x+1][y])&&
+				   !map[x+1][y].getBlocked())
+					itemsToAdd.add(map[x+1][y]);
+			}
+			for(MapLayout hex: itemsToAdd)
+				canReachList.add(hex);
+		}
 		
 		for(int i = startX; i < endX; i++)
 		{
 			for(int j = startY; j < endY; j++)
 			{
-				if((i+j < unusedFloor || i+j > unusedCeiling)||
-				   (i<=0 || j<=0)||
-				   (i > mapSize || j > mapSize)||
-				   (i+j < highlightFloor || i+j > highlightCeiling))
-				{
+				if(i<=0||j<=0||!canReachList.contains(map[i-1][j-1])||
+				  (i+j < unusedFloor || i+j > unusedCeiling)||
+				  (i<=0 || j<=0)||
+				  (i > mapSize || j > mapSize)||
+				  (i+j < highlightFloor || i+j > highlightCeiling))
 					continue;
-				}
+
 				Hexagon hex = this.createHex(i, j, unusedFloor);
-				
 				Color color = new Color(255,166,166,200);
 				g2.setColor(color);
-				if(hex.getHex().contains(mouseX,mouseY))
-				{
+				if(hex.getHex().contains(mouseX,mouseY)){
 					g2.setColor(Color.RED);
-					hoverX = i;
-					hoverY = j;
+					if(!map[i-1][j-1].getBlocked())
+					{
+						hoverX = i;
+						hoverY = j;
+					}
+					else
+					{
+						hoverX = player.getX();
+						hoverY = player.getY();
+					}
 				}
-				
 				g2.fill(hex.getHex());
 			}
 		}
-
 	}
 	
 	private Hexagon createHex(int i, int j, int unusedFloor)
