@@ -118,7 +118,7 @@ public class MapPainter extends JComponent
 				   (getNewHexX(i) > rectangle.width - 15 + width)||
 				   (getNewHexY(i, j, unusedFloor) > rectangle.height - 15)||
 				   (getNewHexX(i) < 0-width)||
-				   (getNewHexY(i, j, unusedFloor) < 0-height))
+				   (getNewHexY(i, j, unusedFloor) < 0-height)) 
 				{
 					continue;
 				}
@@ -129,7 +129,7 @@ public class MapPainter extends JComponent
 				
 				if(hex.getHex().contains(mouseX,mouseY))
 					g2.setColor(Color.RED);
-				if(map[i-1][j-1].getBlocked())
+				else if(map[i-1][j-1].getBlocked())
 					g2.setColor(Color.GRAY);
 				
 				if(!mouse.getClicked() && hex.getHex().contains(mouseX,mouseY))
@@ -166,8 +166,13 @@ public class MapPainter extends JComponent
 		for(DndPlayer player: players)
 		{
 			map[player.getX()-1][player.getY()-1].setBlocked(true);
+			if((getNewHexX(player.getX()) > rectangle.width - 15 + width)||
+			   (getNewHexY(player.getX(), player.getY(), unusedFloor) > rectangle.height - 15)||
+			   (getNewHexX(player.getX()) < 0-width)||
+			   (getNewHexY(player.getX(), player.getY(), unusedFloor) < 0-height))
+			   	continue;
 			PlayerSprite sprite = new PlayerSprite(player);
-			sprite.draw(g2,map);
+			sprite.draw(g2,map,mapScaleX,mapScaleY);
 		}
 		
 
@@ -204,10 +209,10 @@ public class MapPainter extends JComponent
 					x=1;
 				if(y<1)
 					y=1;
-				if(x>=mapSize)
-					x=mapSize-1;
-				if(y>=mapSize)
-					y=mapSize-1;
+				if(x>=mapSize-1)
+					x=mapSize-2;
+				if(y>=mapSize-1)
+					y=mapSize-2;
 
 				if(!canReachList.contains(map[x-1][y]) && 
 				   !itemsToAdd.contains(map[x-1][y]) && 
@@ -247,10 +252,11 @@ public class MapPainter extends JComponent
 		{
 			for(int j = startY; j < endY; j++)
 			{
-				if(i<=0||j<=0||!canReachList.contains(map[i-1][j-1])||
+				if(i<=0||j<=0||
+				(i > mapSize || j > mapSize)||
+				!canReachList.contains(map[i-1][j-1])||
 				  (i+j < unusedFloor || i+j > unusedCeiling)||
 				  (i<=0 || j<=0)||
-				  (i > mapSize || j > mapSize)||
 				  (i+j < highlightFloor || i+j > highlightCeiling))
 					continue;
 
