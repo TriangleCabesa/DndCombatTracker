@@ -130,7 +130,15 @@ public class MapPainter extends JComponent
 				if(hex.getHex().contains(mouseX,mouseY))
 					g2.setColor(Color.RED);
 				else if(map[i-1][j-1].getBlocked())
-					g2.setColor(Color.GRAY);
+					for(DndPlayer player: players)
+					{
+						if(player.getX() == i && player.getY() == j)
+						{
+							g2.setColor(map[i-1][j-1].getColor());
+							break;
+						}
+						g2.setColor(Color.GRAY);
+					}
 				
 				if(!mouse.getClicked() && hex.getHex().contains(mouseX,mouseY))
 				{
