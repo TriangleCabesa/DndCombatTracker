@@ -50,14 +50,15 @@ public class PlayerSprite extends JComponent
 	{
 		BufferedImage img = null;
 		try {
-    		img = ImageIO.read(new File("Female Berserker.jpg"));
+			img = ImageIO.read(new File("Female Berserker.jpg"));
+			img = ImageIO.read(new File("Male Barbarian.png"));
 		}
 		catch (IOException e) {
 			System.out.println("error");
 		}
-		for(int i = 0; i < 32; i++)
+		for(int i = 0; i < img.getWidth(); i++)
 		{
-			for(int j = 0; j < 32; j++)
+			for(int j = 0; j < img.getHeight(); j++)
 			{
 				
 				Color c = new Color(img.getRGB(i, j));
@@ -67,7 +68,7 @@ public class PlayerSprite extends JComponent
 				mapScaleX/=mapScaleX;
 				mapScaleY/=mapScaleY;
 				spriteColors.add(c);
-				spritePixels.add(new Rectangle(xCoordinate+(i-16),yCoordinate+(j-16),mapScaleX,mapScaleY));
+				spritePixels.add(new Rectangle(xCoordinate+(i-(img.getWidth()/2)),yCoordinate+(j-(img.getHeight()/2)),mapScaleX,mapScaleY));
 				
 			}
 			
