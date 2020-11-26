@@ -10,6 +10,7 @@ public class GameMouseListener implements MouseListener
 	private boolean sideScrollBarClick = false;
 	private boolean zoomInClick = false;
 	private boolean zoomOutClick = false;
+	private boolean menuClick = false;
 	private VisualInputs visualInputs;
 	private JFrame display;
 	
@@ -30,14 +31,28 @@ public class GameMouseListener implements MouseListener
 		int y = (int)(p.y-r.getY()-30);
 		p = new Point(x,y);
 		
+
+		if(visualInputs.getMenuButton().contains(p) && !menuClick)
+		{
+			menuClick = true;
+		}
+		else if(visualInputs.getMenuButton().contains(p) && menuClick)
+		{
+			menuClick = false;
+			return;
+		}
+
+		if(menuClick)
+			return;
+		
 		if(visualInputs.getBottomScroller().contains(p) && !bottomScrollBarClick)
-			bottomScrollBarClick = true;
+			return;
 		else if(visualInputs.getBottomScroller().contains(p) && bottomScrollBarClick)
-			bottomScrollBarClick = false;
+			return;
 		else if(visualInputs.getSideScroller().contains(p) && !sideScrollBarClick)
-			sideScrollBarClick = true;
+			return;
 		else if(visualInputs.getSideScroller().contains(p) && sideScrollBarClick)
-			sideScrollBarClick = false;
+			return;
 		else if(visualInputs.getZoomInButton().contains(p) && !zoomInClick)
 			zoomInClick = true;
 		else if(visualInputs.getZoomOutButton().contains(p) && !zoomOutClick)
@@ -56,6 +71,7 @@ public class GameMouseListener implements MouseListener
 	public boolean getSideScrollClicked(){return sideScrollBarClick;}
 	public boolean getZoomIn(){return zoomInClick;}
 	public boolean getZoomOut(){return zoomOutClick;}
+	public boolean getMenuClicked(){return menuClick;}
 	public void resetZoom()
 	{
 		zoomInClick = false;
@@ -69,9 +85,27 @@ public class GameMouseListener implements MouseListener
     public void mouseExited(MouseEvent arg0) { }
 
     @Override
-    public void mousePressed(MouseEvent arg0) { }
+	public void mousePressed(MouseEvent arg0) 
+	{
+		Point p = MouseInfo.getPointerInfo().getLocation();
+		Rectangle r = display.getBounds();
+		int x = (int)(p.x-r.getX()-7);
+		int y = (int)(p.y-r.getY()-30);
+		p = new Point(x,y);
+
+		if(visualInputs.getBottomScroller().contains(p) && !bottomScrollBarClick)
+			bottomScrollBarClick = true;
+		else if(visualInputs.getSideScroller().contains(p) && !sideScrollBarClick)
+			sideScrollBarClick = true;
+
+
+	}
 
     @Override
-    public void mouseReleased(MouseEvent arg0) { }
+	public void mouseReleased(MouseEvent arg0) 
+	{ 
+		bottomScrollBarClick = false;
+		sideScrollBarClick = false;
+	}
 
 }
