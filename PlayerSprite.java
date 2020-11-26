@@ -51,7 +51,10 @@ public class PlayerSprite extends JComponent
 		BufferedImage img = null;
 		try {
 			img = ImageIO.read(new File("Female Berserker.jpg"));
-			img = ImageIO.read(new File("Male Barbarian.png"));
+			if(player.getSkin() == 0)
+				img = ImageIO.read(new File("Male Barbarian.png"));
+			else
+				img = ImageIO.read(new File("Female Bard.png"));
 		}
 		catch (IOException e) {
 			System.out.println("error");

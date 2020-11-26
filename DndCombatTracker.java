@@ -26,8 +26,10 @@ public class DndCombatTracker
 		
 		
 		ArrayList<DndPlayer> players = new ArrayList<>();
-		for(int i = 1; i < 10; i++)
+		for(int i = 1; i < 10; i++){
 			players.add(new DndPlayer(n/2+i,n/2+i,i*10,5));
+			players.get(i-1).setSkin((int)(Math.random()*2));
+		}
 		display.intializeDisplay();
 		Point p = MouseInfo.getPointerInfo().getLocation();
 		int x;

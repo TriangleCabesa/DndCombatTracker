@@ -139,11 +139,12 @@ public class MapPainter extends JComponent
 						}
 						g2.setColor(Color.GRAY);
 					}
-				
+				 
 				if(!mouse.getClicked() && hex.getHex().contains(mouseX,mouseY))
 				{
 					highlightedX = i;
 					highlightedY = j;
+				
 				}
 				else if(mouse.getClicked() && hex.getHex().contains(mouseX,mouseY) && index < 0)
 				{
@@ -190,6 +191,7 @@ public class MapPainter extends JComponent
 		if(finalMapHeight > frame.getHeight())
 			visualInputs.drawSide(g2);
 		visualInputs.drawZoom(g2);
+		visualInputs.drawMenu(g2);
 		
 	}
 
