@@ -68,10 +68,10 @@ public class PlayerSprite extends JComponent
 				if(c.getRed() >= 235 && c.getGreen() >= 235 && c.getBlue() >= 235)
 					continue;
 
-				mapScaleX/=mapScaleX;
-				mapScaleY/=mapScaleY;
+				int spriteScaleX = mapScaleX / 20;
+				int spriteScaleY = mapScaleY / 20;
 				spriteColors.add(c);
-				spritePixels.add(new Rectangle(xCoordinate+(i-(img.getWidth()/2)),yCoordinate+(j-(img.getHeight()/2)),mapScaleX,mapScaleY));
+				spritePixels.add(new Rectangle(xCoordinate+(i-(img.getWidth()/2))+((i-1)*(spriteScaleX/2)) - (mapScaleX/2),yCoordinate+(j-(img.getHeight()/2))+((j-1)*(spriteScaleY/2)) - (mapScaleY/2),spriteScaleX+1,spriteScaleY+1));
 				
 			}
 			
