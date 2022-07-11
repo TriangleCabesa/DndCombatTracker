@@ -93,6 +93,9 @@ public class VisualInputs extends JComponent
 			bottomScrollBar.setLocation(x,(r.height - 57));
 		if(mouse.getSideScrollClicked())
 			sideScrollBar.setLocation((r.width - 31),y);
+		if(mouse.getWheelScroll())
+			sideScrollBar.setLocation(r.width - 31, (int)sideScrollBar.getLocation().getY() + (mouse.getWheelScrollAmount())*(int)(frame.getWidth() * 0.01));
+		mouse.resetScroll();
 		
 		bottomScrollBar = new Rectangle ((int)bottomScrollBar.getX(),
 										 r.height - 57,
@@ -116,6 +119,16 @@ public class VisualInputs extends JComponent
 											14,
 											(int)(frame.getHeight() * 0.10));
 		
+	}
+	
+	
+	public void changeScrollerPosition(JFrame display, int scrollAmount)
+	{
+		frame = display;
+		Rectangle r = frame.getBounds();
+
+		//Change the location of the side scroll bar based on mouse wheel movement
+		sideScrollBar.setLocation((r.width - 31), (int)sideScrollBar.getLocation().getY()+scrollAmount);
 	}
 	
 	public Rectangle getBottomScroller(){return bottomScrollBar;}

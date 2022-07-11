@@ -29,6 +29,7 @@ public class CombatTrackerInterface
 		mouse = new GameMouseListener(visualInputs, display);
 		painter = new MapPainter();
 		display.addMouseListener(mouse);
+		display.addMouseWheelListener(mouse);
 		display.add(painter);
 		display.setVisible(true);
 	}

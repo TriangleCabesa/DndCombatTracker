@@ -1,9 +1,11 @@
 import java.awt.*;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 
-public class GameMouseListener implements MouseListener 
+public class GameMouseListener implements MouseListener, MouseWheelListener 
 {
 	private boolean initiateClick = false;
 	private boolean bottomScrollBarClick = false;
@@ -11,6 +13,8 @@ public class GameMouseListener implements MouseListener
 	private boolean zoomInClick = false;
 	private boolean zoomOutClick = false;
 	private boolean menuClick = false;
+	private boolean wheelScroll = false;
+	private int wheelSCrollAmount = 0;
 	private VisualInputs visualInputs;
 	private JFrame display;
 	
@@ -72,10 +76,17 @@ public class GameMouseListener implements MouseListener
 	public boolean getZoomIn(){return zoomInClick;}
 	public boolean getZoomOut(){return zoomOutClick;}
 	public boolean getMenuClicked(){return menuClick;}
+	public boolean getWheelScroll(){return wheelScroll;}
+	public int getWheelScrollAmount(){return wheelSCrollAmount;}
 	public void resetZoom()
 	{
 		zoomInClick = false;
 		zoomOutClick = false;
+	}
+	public void resetScroll()
+	{
+		wheelSCrollAmount = 0;
+		wheelScroll = false;
 	}
 	
 	@Override
@@ -106,6 +117,13 @@ public class GameMouseListener implements MouseListener
 	{ 
 		bottomScrollBarClick = false;
 		sideScrollBarClick = false;
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent arg0) 
+	{
+		wheelScroll = true;
+		wheelSCrollAmount = arg0.getWheelRotation();
 	}
 
 }
